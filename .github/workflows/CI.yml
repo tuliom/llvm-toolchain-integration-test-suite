@@ -69,7 +69,12 @@ jobs:
             # libc++.a did not link libc++abi.a on old versions
             STATIC_LIBCXX_ENABLED=OFF
          fi
-         cmake -DLIT=/usr/lib/llvm-${{ matrix.version }}/build/utils/lit/lit.py \
+         LIT="/usr/lib/llvm-${{ matrix.version }}/bin/lit"
+         if ! test -e "$LIT"; then
+            # LLVM <= 21 used to use a different path.
+            LIT="/usr/lib/llvm-${{ matrix.version }}/build/utils/lit/lit.py"
+         fi
+         cmake -DLIT="$LIT" \
            -DCLANG_BINARY=/usr/bin/clang-${{ matrix.version }} \
            -DCLANGXX_BINARY=/usr/bin/clang++-${{ matrix.version }} \
            -DCLANG_TIDY_BINARY=/usr/bin/clang-tidy-${{ matrix.version }} \
